@@ -1,0 +1,25 @@
+<header>
+  <span id="userInfo">Cargando usuario...</span>
+  <button id="logoutBtn">Cerrar sesión</button>
+</header>
+
+<script>
+  async function fetchUser() {
+    try {
+      const res = await fetch('/api/sessions/current');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const u = data.user;
+      document.getElementById('userInfo').innerText = `👤 ${u.first_name} ${u.last_name} (${u.email})`;
+    } catch {
+      document.getElementById('userInfo').innerText = 'No logueado';
+    }
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await fetch('/auth/logout');
+    window.location.href = '/login';
+  });
+
+  fetchUser();
+</script>
